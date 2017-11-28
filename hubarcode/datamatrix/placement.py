@@ -12,7 +12,7 @@ class DataMatrixPlacer:
         self.rows = 0
         self.cols = 0
 
-    def place_bit(self, (posx, posy), bit):
+    def place_bit(self, posx, posy, bit):
         """Place bit in the correct location in the matrix"""
 
         # If out of bounds, wrap around to the other side
@@ -35,14 +35,14 @@ class DataMatrixPlacer:
                                   |7|
                                   |8| """
 
-        self.place_bit((self.rows - 1, 0), (codeword & (0x01 << 7)) >> 7)
-        self.place_bit((self.rows - 1, 1), (codeword & (0x01 << 6)) >> 6)
-        self.place_bit((self.rows - 1, 2), (codeword & (0x01 << 5)) >> 5)
-        self.place_bit((0, self.cols - 2), (codeword & (0x01 << 4)) >> 4)
-        self.place_bit((0, self.cols - 1), (codeword & (0x01 << 3)) >> 3)
-        self.place_bit((1, self.cols - 1), (codeword & (0x01 << 2)) >> 2)
-        self.place_bit((2, self.cols - 1), (codeword & (0x01 << 1)) >> 1)
-        self.place_bit((3, self.cols - 1), codeword & 0x01)
+        self.place_bit(self.rows - 1, 0, (codeword & (0x01 << 7)) >> 7)
+        self.place_bit(self.rows - 1, 1, (codeword & (0x01 << 6)) >> 6)
+        self.place_bit(self.rows - 1, 2, (codeword & (0x01 << 5)) >> 5)
+        self.place_bit(0, self.cols - 2, (codeword & (0x01 << 4)) >> 4)
+        self.place_bit(0, self.cols - 1, (codeword & (0x01 << 3)) >> 3)
+        self.place_bit(1, self.cols - 1, (codeword & (0x01 << 2)) >> 2)
+        self.place_bit(2, self.cols - 1, (codeword & (0x01 << 1)) >> 1)
+        self.place_bit(3, self.cols - 1, codeword & 0x01)
 
     def place_special_2(self, codeword):
         """Special corner case 2
@@ -53,14 +53,14 @@ class DataMatrixPlacer:
             top right corner:  |4|5|6|7|
                                      |8| """
 
-        self.place_bit((self.rows - 3, 0), (codeword & (0x01 << 7)) >> 7)
-        self.place_bit((self.rows - 2, 0), (codeword & (0x01 << 6)) >> 6)
-        self.place_bit((self.rows - 1, 0), (codeword & (0x01 << 5)) >> 5)
-        self.place_bit((0, self.cols - 4), (codeword & (0x01 << 4)) >> 4)
-        self.place_bit((0, self.cols - 3), (codeword & (0x01 << 3)) >> 3)
-        self.place_bit((0, self.cols - 2), (codeword & (0x01 << 2)) >> 2)
-        self.place_bit((0, self.cols - 1), (codeword & (0x01 << 1)) >> 1)
-        self.place_bit((1, self.cols - 1), codeword & 0x01)
+        self.place_bit(self.rows - 3, 0, (codeword & (0x01 << 7)) >> 7)
+        self.place_bit(self.rows - 2, 0, (codeword & (0x01 << 6)) >> 6)
+        self.place_bit(self.rows - 1, 0, (codeword & (0x01 << 5)) >> 5)
+        self.place_bit(0, self.cols - 4, (codeword & (0x01 << 4)) >> 4)
+        self.place_bit(0, self.cols - 3, (codeword & (0x01 << 3)) >> 3)
+        self.place_bit(0, self.cols - 2, (codeword & (0x01 << 2)) >> 2)
+        self.place_bit(0, self.cols - 1, (codeword & (0x01 << 1)) >> 1)
+        self.place_bit(1, self.cols - 1, codeword & 0x01)
 
     def place_special_3(self, codeword):
         """Special corner case 3
@@ -73,14 +73,14 @@ class DataMatrixPlacer:
                                   |7|
                                   |8| """
 
-        self.place_bit((self.rows - 3, 0), (codeword & (0x01 << 7)) >> 7)
-        self.place_bit((self.rows - 2, 0), (codeword & (0x01 << 6)) >> 6)
-        self.place_bit((self.rows - 1, 0), (codeword & (0x01 << 5)) >> 5)
-        self.place_bit((0, self.cols - 2), (codeword & (0x01 << 4)) >> 4)
-        self.place_bit((0, self.cols - 1), (codeword & (0x01 << 3)) >> 3)
-        self.place_bit((1, self.cols - 1), (codeword & (0x01 << 2)) >> 2)
-        self.place_bit((2, self.cols - 1), (codeword & (0x01 << 1)) >> 1)
-        self.place_bit((3, self.cols - 1), codeword & 0x01)
+        self.place_bit(self.rows - 3, 0, (codeword & (0x01 << 7)) >> 7)
+        self.place_bit(self.rows - 2, 0, (codeword & (0x01 << 6)) >> 6)
+        self.place_bit(self.rows - 1, 0, (codeword & (0x01 << 5)) >> 5)
+        self.place_bit(0, self.cols - 2, (codeword & (0x01 << 4)) >> 4)
+        self.place_bit(0, self.cols - 1, (codeword & (0x01 << 3)) >> 3)
+        self.place_bit(1, self.cols - 1, (codeword & (0x01 << 2)) >> 2)
+        self.place_bit(2, self.cols - 1, (codeword & (0x01 << 1)) >> 1)
+        self.place_bit(3, self.cols - 1, codeword & 0x01)
 
     def place_special_4(self, codeword):
         """Special corner case 4
@@ -91,31 +91,30 @@ class DataMatrixPlacer:
             top right corner: |3|4|5|
                               |6|7|8| """
 
-        self.place_bit((self.rows - 1, 0), (codeword & (0x01 << 7)) >> 7)
-        self.place_bit((self.rows - 1, self.cols - 1),
-                       (codeword & (0x01 << 6)) >> 6)
-        self.place_bit((0, self.cols - 3), (codeword & (0x01 << 5)) >> 5)
-        self.place_bit((0, self.cols - 2), (codeword & (0x01 << 4)) >> 4)
-        self.place_bit((0, self.cols - 1), (codeword & (0x01 << 3)) >> 3)
-        self.place_bit((1, self.cols - 3), (codeword & (0x01 << 2)) >> 2)
-        self.place_bit((1, self.cols - 2), (codeword & (0x01 << 1)) >> 1)
-        self.place_bit((1, self.cols - 1), codeword & 0x01)
+        self.place_bit(self.rows - 1, 0, (codeword & (0x01 << 7)) >> 7)
+        self.place_bit(self.rows - 1, self.cols - 1, (codeword & (0x01 << 6)) >> 6)
+        self.place_bit(0, self.cols - 3, (codeword & (0x01 << 5)) >> 5)
+        self.place_bit(0, self.cols - 2, (codeword & (0x01 << 4)) >> 4)
+        self.place_bit(0, self.cols - 1, (codeword & (0x01 << 3)) >> 3)
+        self.place_bit(1, self.cols - 3, (codeword & (0x01 << 2)) >> 2)
+        self.place_bit(1, self.cols - 2, (codeword & (0x01 << 1)) >> 1)
+        self.place_bit(1, self.cols - 1, codeword & 0x01)
 
-    def place_standard_shape(self, (posx, posy), codeword):
+    def place_standard_shape(self, posx, posy, codeword):
         """Standard codeword placement
             |1|2|
             |3|4|5|
             |6|7|8| """
 
         if self.matrix[posx][posy] is None:
-            self.place_bit((posx - 2, posy - 2), (codeword & (0x01 << 7)) >> 7)
-            self.place_bit((posx - 2, posy - 1), (codeword & (0x01 << 6)) >> 6)
-            self.place_bit((posx - 1, posy - 2), (codeword & (0x01 << 5)) >> 5)
-            self.place_bit((posx - 1, posy - 1), (codeword & (0x01 << 4)) >> 4)
-            self.place_bit((posx - 1, posy - 0), (codeword & (0x01 << 3)) >> 3)
-            self.place_bit((posx, posy - 2), (codeword & (0x01 << 2)) >> 2)
-            self.place_bit((posx, posy - 1), (codeword & (0x01 << 1)) >> 1)
-            self.place_bit((posx, posy - 0), (codeword & 0x01))
+            self.place_bit(posx - 2, posy - 2, (codeword & (0x01 << 7)) >> 7)
+            self.place_bit(posx - 2, posy - 1, (codeword & (0x01 << 6)) >> 6)
+            self.place_bit(posx - 1, posy - 2, (codeword & (0x01 << 5)) >> 5)
+            self.place_bit(posx - 1, posy - 1, (codeword & (0x01 << 4)) >> 4)
+            self.place_bit(posx - 1, posy - 0, (codeword & (0x01 << 3)) >> 3)
+            self.place_bit(posx, posy - 2, (codeword & (0x01 << 2)) >> 2)
+            self.place_bit(posx, posy - 1, (codeword & (0x01 << 1)) >> 1)
+            self.place_bit(posx, posy - 0, (codeword & 0x01))
 
     def place(self, codewords, matrix):
         """Place all the given codewords into the given matrix
@@ -147,7 +146,7 @@ class DataMatrixPlacer:
             # Sweep upwards diagonally
             while True:
                 if row < self.rows and col >= 0 and self.matrix[row][col] is None:
-                    self.place_standard_shape((row, col), cw_list.pop(0))
+                    self.place_standard_shape(row, col, cw_list.pop(0))
 
                 row -= 2
                 col += 2
@@ -161,7 +160,7 @@ class DataMatrixPlacer:
             # Sweep downwards diagonally
             while True:
                 if row >= 0 and col < self.cols and self.matrix[row][col] is None:
-                    self.place_standard_shape((row, col), cw_list.pop(0))
+                    self.place_standard_shape(row, col, cw_list.pop(0))
 
                 row += 2
                 col -= 2

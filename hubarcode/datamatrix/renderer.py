@@ -2,7 +2,8 @@
 
 __revision__ = "$Rev$"
 
-from cStringIO import StringIO
+# from cStringIO import StringIO
+from io import BytesIO
 try:
     from PIL import Image
 except ImportError:
@@ -26,7 +27,7 @@ class DataMatrixRenderer:
         # add the edge handles
         self.add_handles()
 
-    def put_cell(self, (posx, posy), colour=1):
+    def put_cell(self, posx, posy, colour=1):
         """Set the contents of the given cell"""
 
         self.matrix[posy][posx] = colour
@@ -35,19 +36,19 @@ class DataMatrixRenderer:
         """Set up the edge handles"""
         # bottom solid border
         for posx in range(0, self.width):
-            self.put_cell((posx, self.height - 1))
+            self.put_cell(posx, self.height - 1)
 
         # left solid border
         for posy in range(0, self.height):
-            self.put_cell((0, posy))
+            self.put_cell(0, posy)
 
         # top broken border
         for i in range(0, self.width - 1, 2):
-            self.put_cell((i, 0))
+            self.put_cell(i, 0)
 
         # right broken border
         for i in range(self.height - 1, 0, -2):
-            self.put_cell((self.width - 1, i))
+            self.put_cell(self.width - 1, i)
 
     def add_border(self, colour=1, width=1):
         """Wrap the matrix in a border of given width
@@ -66,15 +67,26 @@ class DataMatrixRenderer:
         """Return the matrix as an PIL object"""
 
         # add the quiet zone (2 x cell width)
-        self.add_border(colour=0, width=2)
+        # self.add_border(colour=0, width=2)
 
         # get the matrix into the right buffer format
         buff = self.get_buffer(cellsize)
 
         # write the buffer out to an image
-        img = Image.frombuffer('L',
-                               (self.width * cellsize, self.height * cellsize),
-                               buff, 'raw', 'L', 0, -1)
+        # img = Image.frombytes('L',
+        #                        (self.width * cellsize, self.height * cellsize),
+        #                        buff, 'raw', 'L', 0, -1)
+        def pixel(value):
+            if value:
+                return (0, 0, 0)
+            return (255, 255, 255)
+
+        image = []
+        for row in self.matrix:
+            for cell in row:
+                image.append(pixel(cell))
+        img = Image.new('RGB', (self.width, self.height))
+        img.putdata(image)
         return img
 
     def write_file(self, cellsize, filename):
@@ -84,7 +96,7 @@ class DataMatrixRenderer:
 
     def get_imagedata(self, cellsize):
         """Write the matrix out as PNG to an bytestream"""
-        imagedata = StringIO()
+        imagedata = BytesIO()
         img = self.get_pilimage(cellsize)
         img.save(imagedata, "PNG")
         return imagedata.getvalue()

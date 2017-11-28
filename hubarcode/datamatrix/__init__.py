@@ -34,9 +34,9 @@ You may use this under a BSD License.
 
 __revision__ = "$Rev$"
 
-from textencoder import TextEncoder
-from placement import DataMatrixPlacer
-from renderer import DataMatrixRenderer
+from .textencoder import TextEncoder
+from .placement import DataMatrixPlacer
+from .renderer import DataMatrixRenderer
 
 
 class DataMatrixEncoder:
@@ -76,3 +76,9 @@ class DataMatrixEncoder:
         """Return an ascii representation of the matrix"""
         dmtx = DataMatrixRenderer(self.matrix)
         return dmtx.get_ascii()
+
+    def get_pilimage(self, cellsize=5):
+        dmtx = DataMatrixRenderer(self.matrix)
+        self.width = dmtx.width
+        self.height = dmtx.height
+        return dmtx.get_pilimage(cellsize)
